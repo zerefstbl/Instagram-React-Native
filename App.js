@@ -1,130 +1,84 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-
-let timer = null;
-
-let ss = 0;
-let mm = 0;
-let hh = 0;
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import Header from './src/Header';
+import List from './src/List';
 
 function App () {
-  const [number, setNumber] = useState('00:00:00');
-  const [botao, setBotao] = useState('Começar');
-  const [ultimo, setUltimo] = useState(null);
-
-  function comecar() {
-    if(timer !== null) {
-      clearInterval(timer);
-      timer = null;
-      setBotao('Começar');
-    } else {
-      timer = setInterval(() => {
-        ss++;
-
-        if(ss == 60) {
-          ss = 0;
-          mm++;
-        }
-
-        if(mm == 60) {
-          mm = 0;
-          hh++;
-        }
-
-        let format = 
-        (hh < 10 ? '0' + hh : hh) + ':'
-        + (mm < 10 ? '0' + mm : mm) + ':'
-        + (ss < 10 ? '0' + ss : ss);
-
-        setNumber(format);
-
-      }, 1000);
-      setBotao('Parar');
+  const [feed, setFeed] = useState([
+    {
+      id: 10, 
+      nome: 'Eduardo', 
+      descricao: 'Mais um dia chorando!',
+      imgperfil: 'https://i.ytimg.com/vi/xxozWeW_iT8/maxresdefault.jpg',
+      imgpublicacao: 'https://i.ytimg.com/vi/2Hi5i9YNwmM/maxresdefault.jpg',
+      likeada: true,
+      likers: 1
+    },
+    {
+      id: '1', 
+      nome: 'Lucas Silva', 
+      descricao: 'Mais um dia de muitos bugs :)', 
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png', 
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto1.png',  
+      likeada: true, 
+      likers: 1
+     },
+    {
+      id: '2', 
+      nome: 'Matheus', 
+      descricao: 'Isso sim é ser raiz!!!!!', 
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png', 
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto2.png', 
+      likeada: false, 
+      likers: 0
+    },
+    {
+      id: '3', 
+      nome: 'Jose Augusto', 
+      descricao: 'Bora trabalhar, hoje estou começando em um projeto novo aqui no sujeito, desde o backend ao frontend', 
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil3.png', 
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto3.png',  
+      likeada: false, 
+      likers: 3
+    },
+    {
+      id: '4', 
+      nome: 'Gustavo Henrique', 
+      descricao: 'Isso sim que é TI!', 
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png', 
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto4.png', 
+      likeada: false, 
+      likers: 1
+    },
+    {
+      id: '5', 
+      nome: 'Guilherme', 
+      descricao: 'Boa tarde galera do insta...', 
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png', 
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto5.png',
+      likeada: false, 
+      likers: 32
     }
-  }
-
-  function parar() {
-    if (timer !== null) {
-      clearInterval(timer);
-      timer = null;
-    }
-
-    setNumber('00:00:00');
-    mm = 0;
-    ss = 0;
-    hh = 0;
-    setUltimo(number)
-    setBotao('Começar')
-  }
+  ]);
 
   return (
     <View style={styles.container}>
-      
-      <Image 
-      source={require('./src/crono.png')}
+      <Header />
+
+      <FlatList 
+      showsVerticalScrollIndicator={false}
+      keyExtractor={(item) => item.id}
+      data={feed}
+      renderItem={({item}) => <List data={item} /> }
       />
-
-      <Text style={styles.timer}>{number}</Text>
-
-      <View style={styles.btnArea}>
-        <TouchableOpacity style={styles.btn} onPress={comecar}>
-          <Text style={styles.btntexto}>{botao}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btn} onPress={parar}>
-          <Text style={styles.btntexto}>Limpar</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.areaCorrida}>
-        <Text style={styles.textoCorrido}> 
-        {ultimo ? 'Ultimo tempo: ' + ultimo : ''}
-        </Text>
-      </View>
-
-    </View>  
+    
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  timer: {
-    marginTop: -170,
-    fontSize: 45,
-    color: '#fff',
-    fontWeight: 'bold'
-  },
-  btnArea: {
-    flexDirection: 'row',
-    marginTop: 130,
-    height: 40
-  },
-  btn: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    height: 40,
-    margin: 17,
-    borderRadius: 9
-  },
-  btntexto: {
-    color: '#121212',
-    fontWeight: 'bold',
-    fontSize: 20
-  },
-  areaCorrida: {
-    marginTop: 40,
-  },
-  textoCorrido: {
-    fontSize: 25,
-    color: 'white',
-    fontStyle: 'italic'
   }
 });
 
